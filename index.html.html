@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  :root {
+    --indigo: #4F46E5;
+    --indigo-light: #EEF2FF;
+    --indigo-mid: #6366F1;
+    --indigo-dark: #3730A3;
+    --violet: #7C3AED;
+    --violet-light: #F5F3FF;
+    --emerald: #059669;
+    --emerald-light: #ECFDF5;
+    --amber: #D97706;
+    --amber-light: #FFFBEB;
+    --rose: #E11D48;
+    --rose-light: #FFF1F2;
+    --sky: #0284C7;
+    --sky-light: #F0F9FF;
+    --slate-50: #F8FAFC;
+    --slate-100: #F1F5F9;
+    --slate-200: #E2E8F0;
+    --slate-300: #CBD5E1;
+    --slate-400: #94A3B8;
+    --slate-500: #64748B;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-800: #1E293B;
+    --slate-900: #0F172A;
+    --white: #FFFFFF;
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  body { font-family: 'Inter', sans-serif; background: var(--slate-50); color: var(--slate-800); min-height: 100vh; }
+
+  /* ===== LAYOUT ===== */
+  .app { display: flex; min-height: 100vh; }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    width: 240px; min-width: 240px; background: var(--slate-900);
+    display: flex; flex-direction: column; height: 100vh;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .sidebar-brand {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .brand-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 18px; font-weight: 800; color: var(--white);
+    letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;
+  }
+  .brand-icon {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--indigo), var(--violet));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+  .brand-sub { font-size: 10px; color: var(--slate-500); margin-top: 2px; letter-spacing: 1px; text-transform: uppercase; }
+  .sidebar-user {
+    margin: 12px 12px 0;
+    background: rgba(255,255,255,0.05);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .user-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--indigo), var(--violet));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px; font-weight: 700; color: var(--white); flex-shrink: 0;
+  }
+  .user-name { font-size: 13px; font-weight: 600; color: var(--white); }
+  .user-role { font-size: 10px; color: var(--slate-400); }
+  .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
+  .nav-section-label {
+    font-size: 9px; font-weight: 600; color: var(--slate-500);
+    text-transform: uppercase; letter-spacing: 1.2px;
+    padding: 0 8px; margin: 12px 0 6px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px; border-radius: var(--radius-sm);
+    cursor: pointer; transition: all 0.15s; margin-bottom: 1px;
+    color: var(--slate-400); font-size: 13px; font-weight: 500;
+    border: none; background: none; width: 100%; text-align: left;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.06); color: var(--white); }
+  .nav-item.active { background: rgba(99,102,241,0.2); color: var(--indigo-mid); }
+  .nav-item .nav-icon { font-size: 16px; width: 18px; text-align: center; flex-shrink: 0; }
+  .nav-badge {
+    margin-left: auto; background: var(--rose); color: var(--white);
+    font-size: 10px; font-weight: 600; padding: 1px 6px;
+    border-radius: 20px; min-width: 18px; text-align: center;
+  }
+  .nav-badge.green { background: var(--emerald); }
+  .sidebar-footer {
+    padding: 12px; border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* ===== MAIN ===== */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* ===== TOPBAR ===== */
+  .topbar {
+    background: var(--white); border-bottom: 1px solid var(--slate-200);
+    padding: 14px 28px; display: flex; align-items: center; gap: 16px;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 17px; font-weight: 700; color: var(--slate-900); flex: 1;
+  }
+  .search-bar {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--slate-100); border: 1px solid var(--slate-200);
+    border-radius: var(--radius-sm); padding: 7px 12px;
+    flex: 0 0 220px;
+  }
+  .search-bar input {
+    background: none; border: none; outline: none;
+    font-size: 13px; color: var(--slate-700); width: 100%;
+    font-family: 'Inter', sans-serif;
+  }
+  .search-bar input::placeholder { color: var(--slate-400); }
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+  .icon-btn {
+    width: 36px; height: 36px; border-radius: var(--radius-sm);
+    background: var(--slate-100); border: 1px solid var(--slate-200);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.15s; font-size: 16px;
+    position: relative;
+  }
+  .icon-btn:hover { background: var(--slate-200); }
+  .notif-dot {
+    position: absolute; top: 6px; right: 6px;
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--rose); border: 1px solid var(--white);
+  }
+
+  /* ===== CONTENT ===== */
+  .content { padding: 24px 28px; overflow-y: auto; flex: 1; }
+
+  /* ===== SECTION ===== */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ===== WELCOME BANNER ===== */
+  .welcome-banner {
+    background: linear-gradient(135deg, var(--slate-900) 0%, #2D1B69 50%, #1e1b4b 100%);
+    border-radius: var(--radius-xl); padding: 28px 32px;
+    margin-bottom: 24px; position: relative; overflow: hidden;
+  }
+  .welcome-banner::before {
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: rgba(99,102,241,0.2);
+  }
+  .welcome-banner::after {
+    content: ''; position: absolute; bottom: -60px; right: 80px;
+    width: 150px; height: 150px; border-radius: 50%;
+    background: rgba(124,58,237,0.15);
+  }
+  .welcome-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 22px; font-weight: 700; color: var(--white); margin-bottom: 6px;
+  }
+  .welcome-sub { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 20px; }
+  .welcome-stats { display: flex; gap: 20px; flex-wrap: wrap; }
+  .welcome-stat {
+    background: rgba(255,255,255,0.08); border-radius: var(--radius-sm);
+    padding: 10px 16px; border: 1px solid rgba(255,255,255,0.1);
+  }
+  .welcome-stat-num {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 20px; font-weight: 700; color: var(--white);
+  }
+  .welcome-stat-label { font-size: 11px; color: rgba(255,255,255,0.5); }
+
+  /* ===== GRID ===== */
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+  .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px; }
+
+  /* ===== STAT CARDS ===== */
+  .stat-card {
+    background: var(--white); border-radius: var(--radius); padding: 18px 20px;
+    border: 1px solid var(--slate-200); box-shadow: var(--shadow-sm);
+  }
+  .stat-icon {
+    width: 40px; height: 40px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; margin-bottom: 12px;
+  }
+  .stat-num {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 26px; font-weight: 700; color: var(--slate-900); line-height: 1;
+  }
+  .stat-label { font-size: 12px; color: var(--slate-500); margin-top: 4px; }
+  .stat-change {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 11px; font-weight: 600; margin-top: 6px;
+    padding: 2px 7px; border-radius: 20px;
+  }
+  .stat-change.up { color: var(--emerald); background: var(--emerald-light); }
+  .stat-change.down { color: var(--rose); background: var(--rose-light); }
+
+  /* ===== CARD ===== */
+  .card {
+    background: var(--white); border-radius: var(--radius-lg);
+    border: 1px solid var(--slate-200); box-shadow: var(--shadow-sm);
+  }
+  .card-header {
+    padding: 18px 20px 0; display: flex; align-items: center;
+    justify-content: space-between; margin-bottom: 16px;
+  }
+  .card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px; font-weight: 700; color: var(--slate-900);
+  }
+  .card-body { padding: 0 20px 20px; }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: var(--radius-sm);
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: all 0.15s; border: none; font-family: 'Inter', sans-serif;
+  }
+  .btn-primary { background: var(--indigo); color: var(--white); }
+  .btn-primary:hover { background: var(--indigo-dark); }
+  .btn-outline {
+    background: none; color: var(--slate-600);
+    border: 1px solid var(--slate-300);
+  }
+  .btn-outline:hover { background: var(--slate-50); }
+  .btn-ghost { background: none; color: var(--slate-500); border: none; padding: 6px 10px; }
+  .btn-ghost:hover { background: var(--slate-100); color: var(--slate-700); }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+  .btn-success { background: var(--emerald); color: var(--white); }
+  .btn-danger { background: var(--rose); color: var(--white); }
+
+  /* ===== PROGRESS ===== */
+  .progress-bar {
+    height: 6px; background: var(--slate-100); border-radius: 99px; overflow: hidden;
+  }
+  .progress-fill { height: 100%; border-radius: 99px; transition: width 0.4s; }
+
+  /* ===== BADGE ===== */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 20px;
+    font-size: 11px; font-weight: 600;
+  }
+  .badge-indigo { background: var(--indigo-light); color: var(--indigo-dark); }
+  .badge-emerald { background: var(--emerald-light); color: var(--emerald); }
+  .badge-amber { background: var(--amber-light); color: var(--amber); }
+  .badge-rose { background: var(--rose-light); color: var(--rose); }
+  .badge-sky { background: var(--sky-light); color: var(--sky); }
+  .badge-violet { background: var(--violet-light); color: var(--violet); }
+
+  /* ===== COURSE CARD ===== */
+  .course-card {
+    background: var(--white); border-radius: var(--radius-lg);
+    border: 1px solid var(--slate-200); padding: 20px;
+    box-shadow: var(--shadow-sm); transition: all 0.2s; cursor: pointer;
+  }
+  .course-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+  .course-thumb {
+    height: 100px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; margin-bottom: 14px;
+  }
+  .course-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px; font-weight: 700; color: var(--slate-900); margin-bottom: 4px;
+  }
+  .course-instructor { font-size: 12px; color: var(--slate-500); margin-bottom: 12px; }
+  .course-meta { display: flex; gap: 12px; margin-top: 10px; }
+  .course-meta-item { font-size: 11px; color: var(--slate-500); display: flex; align-items: center; gap: 4px; }
+
+  /* ===== TABLE ===== */
+  .table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .table th {
+    text-align: left; padding: 10px 14px;
+    font-size: 11px; font-weight: 600; color: var(--slate-500);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--slate-200); background: var(--slate-50);
+  }
+  .table td { padding: 12px 14px; border-bottom: 1px solid var(--slate-100); vertical-align: middle; }
+  .table tr:last-child td { border-bottom: none; }
+  .table tr:hover td { background: var(--slate-50); }
+
+  /* ===== AVATAR ===== */
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; color: var(--white); flex-shrink: 0;
+  }
+
+  /* ===== MINI CHART ===== */
+  .chart-wrapper { padding: 0 20px 20px; }
+  .bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
+  .bar {
+    flex: 1; border-radius: 4px 4px 0 0;
+    transition: all 0.3s; cursor: pointer; position: relative;
+  }
+  .bar:hover { opacity: 0.8; }
+  .bar-label { font-size: 10px; color: var(--slate-400); text-align: center; margin-top: 6px; }
+  .bar-labels { display: flex; gap: 6px; }
+  .bar-labels span { flex: 1; font-size: 10px; color: var(--slate-400); text-align: center; }
+
+  /* ===== DONUT CHART ===== */
+  .donut-row { display: flex; align-items: center; gap: 20px; padding: 0 20px 20px; }
+  .donut-legend { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ===== ACTIVITY FEED ===== */
+  .activity-item {
+    display: flex; gap: 12px; padding: 12px 0;
+    border-bottom: 1px solid var(--slate-100);
+  }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-icon {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 15px;
+  }
+  .activity-text { font-size: 13px; color: var(--slate-700); line-height: 1.4; }
+  .activity-time { font-size: 11px; color: var(--slate-400); margin-top: 3px; }
+
+  /* ===== SCHEDULE ===== */
+  .schedule-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid var(--slate-100);
+  }
+  .schedule-item:last-child { border-bottom: none; }
+  .schedule-time { font-size: 11px; color: var(--slate-500); min-width: 60px; font-weight: 500; }
+  .schedule-bar { width: 3px; height: 36px; border-radius: 99px; flex-shrink: 0; }
+  .schedule-info { flex: 1; }
+  .schedule-course { font-size: 13px; font-weight: 600; color: var(--slate-800); }
+  .schedule-room { font-size: 11px; color: var(--slate-400); }
+
+  /* ===== NOTIFICATION ===== */
+  .notif-item {
+    display: flex; gap: 12px; padding: 12px;
+    border-radius: var(--radius-sm); margin-bottom: 6px;
+    background: var(--slate-50); border: 1px solid var(--slate-200);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .notif-item:hover { background: var(--indigo-light); border-color: var(--indigo-mid); }
+  .notif-item.unread { border-left: 3px solid var(--indigo-mid); }
+
+  /* ===== GRADE CARD ===== */
+  .grade-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 0; border-bottom: 1px solid var(--slate-100);
+  }
+  .grade-circle {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px; font-weight: 700; flex-shrink: 0;
+  }
+
+  /* ===== TAB NAV ===== */
+  .tab-nav { display: flex; gap: 2px; background: var(--slate-100); padding: 4px; border-radius: var(--radius-sm); margin-bottom: 20px; }
+  .tab-btn {
+    flex: 1; padding: 7px 12px; border-radius: 6px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    border: none; background: none; color: var(--slate-500); transition: all 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .tab-btn.active { background: var(--white); color: var(--indigo); box-shadow: var(--shadow-sm); }
+
+  /* ===== ASSIGNMENT CARD ===== */
+  .assignment-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px; border-radius: var(--radius-sm);
+    background: var(--slate-50); border: 1px solid var(--slate-200);
+    margin-bottom: 8px; cursor: pointer; transition: all 0.15s;
+  }
+  .assignment-item:hover { border-color: var(--indigo-mid); background: var(--indigo-light); }
+  .assignment-icon {
+    width: 38px; height: 38px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+  }
+  .assignment-title { font-size: 13px; font-weight: 600; color: var(--slate-800); }
+  .assignment-meta { font-size: 11px; color: var(--slate-500); margin-top: 2px; }
+  .assignment-due { margin-left: auto; text-align: right; }
+  .assignment-due-date { font-size: 12px; font-weight: 600; color: var(--rose); }
+  .assignment-due-label { font-size: 10px; color: var(--slate-400); }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(15,23,42,0.5); z-index: 200;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white); border-radius: var(--radius-xl);
+    padding: 28px; width: 480px; max-width: 90vw;
+    box-shadow: var(--shadow-lg);
+  }
+  .modal-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 18px; font-weight: 700; color: var(--slate-900); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .form-group { margin-bottom: 14px; }
+  .form-label { font-size: 12px; font-weight: 600; color: var(--slate-600); margin-bottom: 6px; display: block; }
+  .form-input {
+    width: 100%; padding: 9px 12px; border-radius: var(--radius-sm);
+    border: 1px solid var(--slate-300); font-size: 13px; outline: none;
+    font-family: 'Inter', sans-serif; color: var(--slate-800);
+    transition: border-color 0.15s;
+  }
+  .form-input:focus { border-color: var(--indigo-mid); box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+  .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+  /* ===== CALENDAR ===== */
+  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-day {
+    aspect-ratio: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    border-radius: 8px; cursor: pointer; font-size: 12px;
+    transition: all 0.15s; position: relative;
+  }
+  .cal-day:hover { background: var(--slate-100); }
+  .cal-day.today { background: var(--indigo); color: var(--white); font-weight: 700; }
+  .cal-day.has-event::after {
+    content: ''; position: absolute; bottom: 3px;
+    width: 4px; height: 4px; border-radius: 50%; background: var(--indigo-mid);
+  }
+  .cal-day.today.has-event::after { background: var(--white); }
+  .cal-day.other-month { color: var(--slate-300); }
+  .cal-header-day { font-size: 11px; font-weight: 600; color: var(--slate-400); text-align: center; padding: 6px 0; }
+
+  /* ===== GPA WIDGET ===== */
+  .gpa-ring { position: relative; width: 100px; height: 100px; }
+  .gpa-number {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .gpa-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; color: var(--indigo); }
+  .gpa-label { font-size: 10px; color: var(--slate-500); }
+
+  /* ===== QUICK LINKS ===== */
+  .quick-link {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 6px; padding: 14px 8px; border-radius: var(--radius-sm);
+    cursor: pointer; transition: all 0.15s; text-align: center;
+  }
+  .quick-link:hover { background: var(--slate-100); }
+  .quick-link-icon {
+    width: 42px; height: 42px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+  .quick-link-label { font-size: 11px; font-weight: 600; color: var(--slate-600); }
+
+  /* ===== SCROLLABLE ===== */
+  .scrollable { max-height: 300px; overflow-y: auto; }
+  .scrollable::-webkit-scrollbar { width: 4px; }
+  .scrollable::-webkit-scrollbar-track { background: transparent; }
+  .scrollable::-webkit-scrollbar-thumb { background: var(--slate-200); border-radius: 99px; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2-1 { grid-template-columns: 1fr; }
+    .sidebar { width: 56px; min-width: 56px; }
+    .sidebar-brand, .nav-section-label, .nav-item span:not(.nav-icon) { display: none; }
+    .sidebar-user { display: none; }
+    .nav-item { justify-content: center; padding: 10px; }
+  }
+  @media (max-width: 600px) {
+    .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+    .content { padding: 16px; }
+    .topbar { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name">
+        <div class="brand-icon">🎓</div>
+        NavinEdu
+      </div>
+      <div class="brand-sub">Student Portal</div>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">N</div>
+      <div>
+        <div class="user-name">Navin Kumar</div>
+        <div class="user-role">CS Engineering · Sem 5</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <button class="nav-item active" onclick="showSection('dashboard', this)">
+        <i class="ti ti-layout-dashboard nav-icon"></i>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" onclick="showSection('courses', this)">
+        <i class="ti ti-book nav-icon"></i>
+        <span>My Courses</span>
+        <span class="nav-badge green">6</span>
+      </button>
+      <button class="nav-item" onclick="showSection('assignments', this)">
+        <i class="ti ti-clipboard-list nav-icon"></i>
+        <span>Assignments</span>
+        <span class="nav-badge">3</span>
+      </button>
+      <button class="nav-item" onclick="showSection('grades', this)">
+        <i class="ti ti-chart-bar nav-icon"></i>
+        <span>Grades & GPA</span>
+      </button>
+      <button class="nav-item" onclick="showSection('schedule', this)">
+        <i class="ti ti-calendar nav-icon"></i>
+        <span>Schedule</span>
+      </button>
+
+      <div class="nav-section-label">Resources</div>
+      <button class="nav-item" onclick="showSection('materials', this)">
+        <i class="ti ti-files nav-icon"></i>
+        <span>Materials</span>
+      </button>
+      <button class="nav-item" onclick="showSection('notifications', this)">
+        <i class="ti ti-bell nav-icon"></i>
+        <span>Notifications</span>
+        <span class="nav-badge">5</span>
+      </button>
+      <button class="nav-item" onclick="showSection('profile', this)">
+        <i class="ti ti-user-circle nav-icon"></i>
+        <span>My Profile</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="nav-item" style="color: var(--rose);">
+        <i class="ti ti-logout nav-icon"></i>
+        <span>Log Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-title" id="page-title">Dashboard</div>
+      <div class="search-bar">
+        <i class="ti ti-search" style="color:var(--slate-400);font-size:15px;"></i>
+        <input type="text" placeholder="Search courses, assignments...">
+      </div>
+      <div class="topbar-actions">
+        <div class="icon-btn" onclick="showSection('notifications', document.querySelector('[onclick*=notifications]'))">
+          <i class="ti ti-bell" style="color:var(--slate-600)"></i>
+          <div class="notif-dot"></div>
+        </div>
+        <div class="icon-btn">
+          <i class="ti ti-settings" style="color:var(--slate-600)"></i>
+        </div>
+        <div class="user-avatar" style="width:34px;height:34px;cursor:pointer;background:linear-gradient(135deg,#4F46E5,#7C3AED)">N</div>
+      </div>
+    </header>
+
+    <!-- CONTENT AREA -->
+    <main class="content">
+
+      <!-- ============ DASHBOARD ============ -->
+      <div class="section active" id="sec-dashboard">
+
+        <div class="welcome-banner">
+          <div class="welcome-title">Good morning, Navin! 👋</div>
+          <div class="welcome-sub">You have 3 assignments due this week. Keep it up!</div>
+          <div class="welcome-stats">
+            <div class="welcome-stat">
+              <div class="welcome-stat-num">6</div>
+              <div class="welcome-stat-label">Active Courses</div>
+            </div>
+            <div class="welcome-stat">
+              <div class="welcome-stat-num">87%</div>
+              <div class="welcome-stat-label">Avg. Attendance</div>
+            </div>
+            <div class="welcome-stat">
+              <div class="welcome-stat-num">8.6</div>
+              <div class="welcome-stat-label">Current CGPA</div>
+            </div>
+            <div class="welcome-stat">
+              <div class="welcome-stat-num">14</div>
+              <div class="welcome-stat-label">Days to Exam</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="grid-4">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--indigo-light)">📚</div>
+            <div class="stat-num">6</div>
+            <div class="stat-label">Enrolled Courses</div>
+            <div class="stat-change up">↑ 2 from last sem</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--amber-light)">📝</div>
+            <div class="stat-num">3</div>
+            <div class="stat-label">Pending Tasks</div>
+            <div class="stat-change down">↓ Due this week</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--emerald-light)">🏆</div>
+            <div class="stat-num">8.6</div>
+            <div class="stat-label">CGPA</div>
+            <div class="stat-change up">↑ 0.3 from last sem</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--sky-light)">📅</div>
+            <div class="stat-num">87%</div>
+            <div class="stat-label">Attendance</div>
+            <div class="stat-change up">↑ 4% this month</div>
+          </div>
+        </div>
+
+        <!-- QUICK LINKS -->
+        <div class="card" style="margin-bottom:24px;">
+          <div class="card-header">
+            <div class="card-title">Quick Actions</div>
+          </div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;">
+              <div class="quick-link" onclick="showSection('assignments', document.querySelector('[onclick*=assignments]'))">
+                <div class="quick-link-icon" style="background:var(--amber-light)">📋</div>
+                <div class="quick-link-label">Submit Assignment</div>
+              </div>
+              <div class="quick-link" onclick="showSection('grades', document.querySelector('[onclick*=grades]'))">
+                <div class="quick-link-icon" style="background:var(--emerald-light)">📊</div>
+                <div class="quick-link-label">View Grades</div>
+              </div>
+              <div class="quick-link" onclick="showSection('schedule', document.querySelector('[onclick*=schedule]'))">
+                <div class="quick-link-icon" style="background:var(--sky-light)">🗓️</div>
+                <div class="quick-link-label">My Schedule</div>
+              </div>
+              <div class="quick-link" onclick="showSection('materials', document.querySelector('[onclick*=materials]'))">
+                <div class="quick-link-icon" style="background:var(--violet-light)">📁</div>
+                <div class="quick-link-label">Study Materials</div>
+              </div>
+              <div class="quick-link" onclick="document.getElementById('enrollModal').classList.add('open')">
+                <div class="quick-link-icon" style="background:var(--indigo-light)">➕</div>
+                <div class="quick-link-label">Enroll Course</div>
+              </div>
+              <div class="quick-link">
+                <div class="quick-link-icon" style="background:var(--rose-light)">🎓</div>
+                <div class="quick-link-label">Exam Results</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2-1">
+          <!-- ATTENDANCE CHART -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Attendance Overview</div>
+              <select class="form-input" style="width:auto;padding:4px 24px 4px 8px;font-size:12px;" class="form-select">
+                <option>This Month</option>
+                <option>Last Month</option>
+              </select>
+            </div>
+            <div class="chart-wrapper">
+              <div class="bar-chart">
+                <div style="display:flex;flex-direction:column;align-items:center;flex:1;height:100%;">
+                  <div class="bar" style="width:100%;height:82%;background:var(--indigo);border-radius:4px 4px 0 0;" title="Data Structures: 82%"></div>
+                  <div class="bar-label">DS</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;flex:1;height:100%;">
+                  <div class="bar" style="width:100%;height:95%;background:var(--emerald);border-radius:4px 4px 0 0;" title="Algorithms: 95%"></div>
+                  <div class="bar-label">Algo</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;flex:1;height:100%;">
+                  <div class="bar" style="width:100%;height:75%;background:var(--amber);border-radius:4px 4px 0 0;" title="DBMS: 75%"></div>
+                  <div class="bar-label">DBMS</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;flex:1;height:100%;">
+                  <div class="bar" style="width:100%;height:90%;background:var(--indigo-mid);border-radius:4px 4px 0 0;" title="OS: 90%"></div>
+                  <div class="bar-label">OS</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;flex:1;height:100%;">
+                  <div class="bar" style="width:100%;height:88%;background:var(--violet);border-radius:4px 4px 0 0;" title="Networks: 88%"></div>
+                  <div class="bar-label">Networks</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;flex:1;height:100%;">
+                  <div class="bar" style="width:100%;height:70%;background:var(--rose);border-radius:4px 4px 0 0;" title="ML: 70%"></div>
+                  <div class="bar-label">ML</div>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:8px;">
+                <span style="font-size:11px;color:var(--slate-400)">0%</span>
+                <span style="font-size:11px;color:var(--slate-400)">Attendance per course</span>
+                <span style="font-size:11px;color:var(--slate-400)">100%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- TODAY'S SCHEDULE -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Today's Classes</div>
+              <span class="badge badge-indigo">Fri, 27 Jun</span>
+            </div>
+            <div class="card-body scrollable">
+              <div class="schedule-item">
+                <div class="schedule-time">08:00 AM</div>
+                <div class="schedule-bar" style="background:var(--indigo)"></div>
+                <div class="schedule-info">
+                  <div class="schedule-course">Data Structures</div>
+                  <div class="schedule-room">Room 301 · Dr. Ramesh</div>
+                </div>
+              </div>
+              <div class="schedule-item">
+                <div class="schedule-time">10:00 AM</div>
+                <div class="schedule-bar" style="background:var(--emerald)"></div>
+                <div class="schedule-info">
+                  <div class="schedule-course">Algorithms Lab</div>
+                  <div class="schedule-room">Lab B2 · Prof. Ananya</div>
+                </div>
+              </div>
+              <div class="schedule-item">
+                <div class="schedule-time">01:00 PM</div>
+                <div class="schedule-bar" style="background:var(--amber)"></div>
+                <div class="schedule-info">
+                  <div class="schedule-course">DBMS</div>
+                  <div class="schedule-room">Room 201 · Dr. Priya</div>
+                </div>
+              </div>
+              <div class="schedule-item">
+                <div class="schedule-time">03:00 PM</div>
+                <div class="schedule-bar" style="background:var(--violet)"></div>
+                <div class="schedule-info">
+                  <div class="schedule-course">Machine Learning</div>
+                  <div class="schedule-room">Room 402 · Prof. Karthik</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECENT ACTIVITY + DEADLINES -->
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Recent Activity</div>
+            </div>
+            <div class="card-body scrollable">
+              <div class="activity-item">
+                <div class="activity-icon" style="background:var(--emerald-light)">✅</div>
+                <div>
+                  <div class="activity-text">Submitted <strong>Lab Report 4</strong> for Algorithms</div>
+                  <div class="activity-time">2 hours ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background:var(--indigo-light)">📖</div>
+                <div>
+                  <div class="activity-text">Accessed lecture notes for <strong>DBMS Module 6</strong></div>
+                  <div class="activity-time">4 hours ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background:var(--amber-light)">🏅</div>
+                <div>
+                  <div class="activity-text">Received grade <strong>A+</strong> on OS Assignment 3</div>
+                  <div class="activity-time">Yesterday</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background:var(--violet-light)">🎯</div>
+                <div>
+                  <div class="activity-text">Enrolled in <strong>Machine Learning</strong> elective</div>
+                  <div class="activity-time">2 days ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Upcoming Deadlines</div>
+              <button class="btn btn-outline btn-sm" onclick="showSection('assignments', document.querySelector('[onclick*=assignments]'))">View all</button>
+            </div>
+            <div class="card-body scrollable">
+              <div class="assignment-item">
+                <div class="assignment-icon" style="background:var(--rose-light)">📝</div>
+                <div>
+                  <div class="assignment-title">ML Project Proposal</div>
+                  <div class="assignment-meta">Machine Learning</div>
+                </div>
+                <div class="assignment-due">
+                  <div class="assignment-due-date">Jun 30</div>
+                  <div class="assignment-due-label">3 days left</div>
+                </div>
+              </div>
+              <div class="assignment-item">
+                <div class="assignment-icon" style="background:var(--amber-light)">💻</div>
+                <div>
+                  <div class="assignment-title">DBMS Lab Exercise</div>
+                  <div class="assignment-meta">Database Management</div>
+                </div>
+                <div class="assignment-due">
+                  <div class="assignment-due-date">Jul 2</div>
+                  <div class="assignment-due-label">5 days left</div>
+                </div>
+              </div>
+              <div class="assignment-item">
+                <div class="assignment-icon" style="background:var(--indigo-light)">📖</div>
+                <div>
+                  <div class="assignment-title">Networks Case Study</div>
+                  <div class="assignment-meta">Computer Networks</div>
+                </div>
+                <div class="assignment-due">
+                  <div class="assignment-due-date">Jul 5</div>
+                  <div class="assignment-due-label">8 days left</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ COURSES ============ -->
+      <div class="section" id="sec-courses">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+          <div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;color:var(--slate-900)">My Courses</div>
+            <div style="font-size:13px;color:var(--slate-500);margin-top:2px;">Semester 5 · B.Tech Computer Science</div>
+          </div>
+          <button class="btn btn-primary" onclick="document.getElementById('enrollModal').classList.add('open')">
+            <i class="ti ti-plus"></i> Enroll New Course
+          </button>
+        </div>
+
+        <div class="tab-nav">
+          <button class="tab-btn active">All Courses (6)</button>
+          <button class="tab-btn">In Progress</button>
+          <button class="tab-btn">Completed</button>
+          <button class="tab-btn">Bookmarked</button>
+        </div>
+
+        <div class="grid-3">
+          <div class="course-card">
+            <div class="course-thumb" style="background:var(--indigo-light)">🧮</div>
+            <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:4px;">
+              <div class="course-title">Data Structures & Algorithms</div>
+              <span class="badge badge-indigo">Core</span>
+            </div>
+            <div class="course-instructor">👨‍🏫 Dr. Ramesh Kumar</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:72%;background:var(--indigo)"></div></div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px;">
+              <span style="font-size:11px;color:var(--slate-500)">72% complete</span>
+              <span style="font-size:11px;font-weight:600;color:var(--indigo)">A</span>
+            </div>
+            <div class="course-meta">
+              <div class="course-meta-item">⏱ 4 credits</div>
+              <div class="course-meta-item">📚 18/25 lectures</div>
+              <div class="course-meta-item">⭐ 4.8</div>
+            </div>
+          </div>
+
+          <div class="course-card">
+            <div class="course-thumb" style="background:var(--emerald-light)">🗄️</div>
+            <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:4px;">
+              <div class="course-title">Database Management Systems</div>
+              <span class="badge badge-emerald">Core</span>
+            </div>
+            <div class="course-instructor">👩‍🏫 Dr. Priya Sundaram</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:60%;background:var(--emerald)"></div></div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px;">
+              <span style="font-size:11px;color:var(--slate-500)">60% complete</span>
+              <span style="font-size:11px;font-weight:600;color:var(--emerald)">B+</span>
+            </div>
+            <div class="course-meta">
+              <div class="course-meta-item">⏱ 4 credits</div>
+              <div class="course-meta-item">📚 15/25 lectures</div>
+              <div class="course-meta-item">⭐ 4.6</div>
+            </div>
+          </div>
+
+          <div class="course-card">
+            <div class="course-thumb" style="background:var(--sky-light)">🌐</div>
+            <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:4px;">
+              <div class="course-title">Computer Networks</div>
+              <span class="badge badge-sky">Core</span>
+            </div>
+            <div class="course-instructor">👨‍🏫 Prof. Vijay Nair</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:55%;background:var(--sky)"></div></div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px;">
+              <span style="font-size:11px;color:var(--slate-500)">55% complete</span>
+              <span style="font-size:11px;font-weight:600;color:var(--sky)">A-</span>
+            </div>
+            <div class="course-meta">
+              <div class="course-meta-item">⏱ 3 credits</div>
+              <div class="course-meta-item">📚 14/25 lectures</div>
+              <div class="course-meta-item">⭐ 4.5</div>
+            </div>
+          </div>
+
+          <div class="course-card">
+            <div class="course-thumb" style="background:var(--violet-light)">🤖</div>
+            <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:4px;">
+              <div class="course-title">Machine Learning</div>
+              <span class="badge badge-violet">Elective</span>
+            </div>
+            <div class="course-instructor">👨‍🏫 Prof. Karthik Raj</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:45%;background:var(--violet)"></div></div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px;">
+              <span style="font-size:11px;color:var(--slate-500)">45% complete</span>
+              <span style="font-size:11px;font-weight:600;color:var(--violet)">A+</span>
+            </div>
+            <div class="course-meta">
+              <div class="course-meta-item">⏱ 3 credits</div>
+              <div class="course-meta-item">📚 11/24 lectures</div>
+              <div class="course-meta-item">⭐ 4.9</div>
+            </div>
+          </div>
+
+          <div class="course-card">
+            <div class="course-thumb" style="background:var(--amber-light)">⚙️</div>
+            <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:4px;">
+              <div class="course-title">Operating Systems</div>
+              <span class="badge badge-amber">Core</span>
+            </div>
+            <div class="course-instructor">👩‍🏫 Prof. Meena Iyer</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:80%;background:var(--amber)"></div></div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px;">
+              <span style="font-size:11px;color:var(--slate-500)">80% complete</span>
+              <span style="font-size:11px;font-weight:600;color:var(--amber)">A</span>
+            </div>
+            <div class="course-meta">
+              <div class="course-meta-item">⏱ 4 credits</div>
+              <div class="course-meta-item">📚 20/25 lectures</div>
+              <div class="course-meta-item">⭐ 4.7</div>
+            </div>
+          </div>
+
+          <div class="course-card">
+            <div class="course-thumb" style="background:var(--rose-light)">🔐</div>
+            <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:4px;">
+              <div class="course-title">Cybersecurity Fundamentals</div>
+              <span class="badge badge-rose">Elective</span>
+            </div>
+            <div class="course-instructor">👨‍🏫 Dr. Arun Mehta</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:40%;background:var(--rose)"></div></div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px;">
+              <span style="font-size:11px;color:var(--slate-500)">40% complete</span>
+              <span style="font-size:11px;font-weight:600;color:var(--rose)">B+</span>
+            </div>
+            <div class="course-meta">
+              <div class="course-meta-item">⏱ 3 credits</div>
+              <div class="course-meta-item">📚 10/25 lectures</div>
+              <div class="course-meta-item">⭐ 4.4</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ ASSIGNMENTS ============ -->
+      <div class="section" id="sec-assignments">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+          <div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;color:var(--slate-900)">Assignments & Tasks</div>
+            <div style="font-size:13px;color:var(--slate-500);margin-top:2px;">3 pending · 2 submitted · 8 completed</div>
+          </div>
+        </div>
+
+        <div class="tab-nav">
+          <button class="tab-btn active">Pending (3)</button>
+          <button class="tab-btn">Submitted (2)</button>
+          <button class="tab-btn">Graded (8)</button>
+          <button class="tab-btn">All</button>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <div class="assignment-item">
+            <div class="assignment-icon" style="background:var(--rose-light)">🤖</div>
+            <div style="flex:1;">
+              <div class="assignment-title">ML Project Proposal</div>
+              <div class="assignment-meta">Machine Learning · Prof. Karthik Raj · 25 marks</div>
+              <div style="margin-top:6px;"><span class="badge badge-rose">High Priority</span></div>
+            </div>
+            <div class="assignment-due" style="margin-right:12px;">
+              <div class="assignment-due-date">Jun 30, 2026</div>
+              <div class="assignment-due-label">3 days left</div>
+            </div>
+            <button class="btn btn-primary btn-sm">Submit</button>
+          </div>
+
+          <div class="assignment-item">
+            <div class="assignment-icon" style="background:var(--amber-light)">🗄️</div>
+            <div style="flex:1;">
+              <div class="assignment-title">DBMS Lab Exercise — SQL Queries</div>
+              <div class="assignment-meta">Database Management · Dr. Priya · 20 marks</div>
+              <div style="margin-top:6px;"><span class="badge badge-amber">Medium Priority</span></div>
+            </div>
+            <div class="assignment-due" style="margin-right:12px;">
+              <div class="assignment-due-date">Jul 2, 2026</div>
+              <div class="assignment-due-label">5 days left</div>
+            </div>
+            <button class="btn btn-primary btn-sm">Submit</button>
+          </div>
+
+          <div class="assignment-item">
+            <div class="assignment-icon" style="background:var(--indigo-light)">🌐</div>
+            <div style="flex:1;">
+              <div class="assignment-title">Networks Case Study — TCP/IP Analysis</div>
+              <div class="assignment-meta">Computer Networks · Prof. Vijay · 30 marks</div>
+              <div style="margin-top:6px;"><span class="badge badge-indigo">Normal</span></div>
+            </div>
+            <div class="assignment-due" style="margin-right:12px;">
+              <div class="assignment-due-date">Jul 5, 2026</div>
+              <div class="assignment-due-label">8 days left</div>
+            </div>
+            <button class="btn btn-primary btn-sm">Submit</button>
+          </div>
+        </div>
+
+        <div style="margin-top:24px;">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:var(--slate-900);margin-bottom:12px;">Recently Graded</div>
+          <div class="card">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Assignment</th>
+                  <th>Course</th>
+                  <th>Submitted</th>
+                  <th>Marks</th>
+                  <th>Grade</th>
+                  <th>Feedback</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight:500">OS Assignment 3 — Process Scheduling</td>
+                  <td><span class="badge badge-amber">OS</span></td>
+                  <td style="color:var(--slate-500)">Jun 20</td>
+                  <td style="font-weight:600">28/30</td>
+                  <td><span class="badge badge-emerald">A+</span></td>
+                  <td><button class="btn btn-ghost btn-sm">View</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:500">DSA Lab Report 4 — Graph Traversal</td>
+                  <td><span class="badge badge-indigo">DSA</span></td>
+                  <td style="color:var(--slate-500)">Jun 18</td>
+                  <td style="font-weight:600">24/25</td>
+                  <td><span class="badge badge-emerald">A</span></td>
+                  <td><button class="btn btn-ghost btn-sm">View</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:500">Networks Quiz — OSI Model</td>
+                  <td><span class="badge badge-sky">CN</span></td>
+                  <td style="color:var(--slate-500)">Jun 15</td>
+                  <td style="font-weight:600">18/20</td>
+                  <td><span class="badge badge-indigo">A-</span></td>
+                  <td><button class="btn btn-ghost btn-sm">View</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ GRADES ============ -->
+      <div class="section" id="sec-grades">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;color:var(--slate-900);margin-bottom:20px;">Grades & Academic Performance</div>
+
+        <div class="grid-4" style="margin-bottom:24px;">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--indigo-light)">🎓</div>
+            <div class="stat-num">8.6</div>
+            <div class="stat-label">Current CGPA</div>
+            <div class="stat-change up">↑ Excellent Standing</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--emerald-light)">📊</div>
+            <div class="stat-num">8.9</div>
+            <div class="stat-label">Semester GPA</div>
+            <div class="stat-change up">↑ 0.3 from last sem</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--amber-light)">🏆</div>
+            <div class="stat-num">21</div>
+            <div class="stat-label">Credits Earned</div>
+            <div class="stat-change up">↑ of 23 total</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--violet-light)">⭐</div>
+            <div class="stat-num">4</div>
+            <div class="stat-label">Rank in Class</div>
+            <div class="stat-change up">↑ Top 5%</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:24px;">
+          <div class="card-header">
+            <div class="card-title">Course-wise Grades — Semester 5</div>
+          </div>
+          <div class="card-body">
+            <div class="grade-row">
+              <div class="grade-circle" style="background:var(--indigo-light);color:var(--indigo-dark)">A</div>
+              <div style="flex:1;">
+                <div style="font-weight:600;font-size:13px;color:var(--slate-800)">Data Structures & Algorithms</div>
+                <div style="font-size:11px;color:var(--slate-500);margin-top:2px;">Mid: 46/50 · Lab: 24/25 · End-sem ongoing</div>
+                <div style="margin-top:6px;"><div class="progress-bar"><div class="progress-fill" style="width:92%;background:var(--indigo)"></div></div></div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;color:var(--indigo)">92%</div>
+                <div style="font-size:11px;color:var(--slate-400)">4 credits</div>
+              </div>
+            </div>
+            <div class="grade-row">
+              <div class="grade-circle" style="background:var(--emerald-light);color:var(--emerald)">B+</div>
+              <div style="flex:1;">
+                <div style="font-weight:600;font-size:13px;color:var(--slate-800)">Database Management Systems</div>
+                <div style="font-size:11px;color:var(--slate-500);margin-top:2px;">Mid: 40/50 · Lab: 22/25 · End-sem ongoing</div>
+                <div style="margin-top:6px;"><div class="progress-bar"><div class="progress-fill" style="width:82%;background:var(--emerald)"></div></div></div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;color:var(--emerald)">82%</div>
+                <div style="font-size:11px;color:var(--slate-400)">4 credits</div>
+              </div>
+            </div>
+            <div class="grade-row">
+              <div class="grade-circle" style="background:var(--sky-light);color:var(--sky)">A-</div>
+              <div style="flex:1;">
+                <div style="font-weight:600;font-size:13px;color:var(--slate-800)">Computer Networks</div>
+                <div style="font-size:11px;color:var(--slate-500);margin-top:2px;">Mid: 44/50 · Lab: 21/25 · End-sem ongoing</div>
+                <div style="margin-top:6px;"><div class="progress-bar"><div class="progress-fill" style="width:88%;background:var(--sky)"></div></div></div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;color:var(--sky)">88%</div>
+                <div style="font-size:11px;color:var(--slate-400)">3 credits</div>
+              </div>
+            </div>
+            <div class="grade-row">
+              <div class="grade-circle" style="background:var(--violet-light);color:var(--violet)">A+</div>
+              <div style="flex:1;">
+                <div style="font-weight:600;font-size:13px;color:var(--slate-800)">Machine Learning</div>
+                <div style="font-size:11px;color:var(--slate-500);margin-top:2px;">Mid: 49/50 · Project: 24/25 · End-sem ongoing</div>
+                <div style="margin-top:6px;"><div class="progress-bar"><div class="progress-fill" style="width:96%;background:var(--violet)"></div></div></div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;color:var(--violet)">96%</div>
+                <div style="font-size:11px;color:var(--slate-400)">3 credits</div>
+              </div>
+            </div>
+            <div class="grade-row">
+              <div class="grade-circle" style="background:var(--amber-light);color:var(--amber)">A</div>
+              <div style="flex:1;">
+                <div style="font-weight:600;font-size:13px;color:var(--slate-800)">Operating Systems</div>
+                <div style="font-size:11px;color:var(--slate-500);margin-top:2px;">Mid: 45/50 · Lab: 24/25 · End-sem ongoing</div>
+                <div style="margin-top:6px;"><div class="progress-bar"><div class="progress-fill" style="width:90%;background:var(--amber)"></div></div></div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;color:var(--amber)">90%</div>
+                <div style="font-size:11px;color:var(--slate-400)">4 credits</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ SCHEDULE ============ -->
+      <div class="section" id="sec-schedule">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;color:var(--slate-900);margin-bottom:20px;">Class Schedule & Calendar</div>
+
+        <div class="grid-2">
+          <!-- TIMETABLE -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Weekly Timetable</div>
+              <span class="badge badge-indigo">June 2026</span>
+            </div>
+            <div class="card-body">
+              <table class="table" style="font-size:12px;">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="color:var(--slate-400);white-space:nowrap">08–10</td>
+                    <td><span class="badge badge-indigo" style="font-size:10px;">DSA</span></td>
+                    <td><span class="badge badge-amber" style="font-size:10px;">OS</span></td>
+                    <td><span class="badge badge-emerald" style="font-size:10px;">DBMS</span></td>
+                    <td><span class="badge badge-indigo" style="font-size:10px;">DSA</span></td>
+                    <td><span class="badge badge-indigo" style="font-size:10px;">DSA</span></td>
+                  </tr>
+                  <tr>
+                    <td style="color:var(--slate-400);white-space:nowrap">10–12</td>
+                    <td><span class="badge badge-emerald" style="font-size:10px;">DBMS Lab</span></td>
+                    <td>—</td>
+                    <td><span class="badge badge-sky" style="font-size:10px;">CN</span></td>
+                    <td><span class="badge badge-amber" style="font-size:10px;">OS</span></td>
+                    <td><span class="badge badge-emerald" style="font-size:10px;">Algo Lab</span></td>
+                  </tr>
+                  <tr>
+                    <td style="color:var(--slate-400);white-space:nowrap">01–03</td>
+                    <td><span class="badge badge-sky" style="font-size:10px;">CN</span></td>
+                    <td><span class="badge badge-violet" style="font-size:10px;">ML</span></td>
+                    <td><span class="badge badge-amber" style="font-size:10px;">OS Lab</span></td>
+                    <td><span class="badge badge-sky" style="font-size:10px;">CN Lab</span></td>
+                    <td><span class="badge badge-emerald" style="font-size:10px;">DBMS</span></td>
+                  </tr>
+                  <tr>
+                    <td style="color:var(--slate-400);white-space:nowrap">03–05</td>
+                    <td>—</td>
+                    <td><span class="badge badge-rose" style="font-size:10px;">CySec</span></td>
+                    <td><span class="badge badge-violet" style="font-size:10px;">ML Lab</span></td>
+                    <td>—</td>
+                    <td><span class="badge badge-violet" style="font-size:10px;">ML</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- MINI CALENDAR -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">June 2026</div>
+              <div style="display:flex;gap:6px;">
+                <button class="btn btn-outline btn-sm">‹</button>
+                <button class="btn btn-outline btn-sm">›</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:8px;">
+                <div class="cal-header-day">S</div><div class="cal-header-day">M</div><div class="cal-header-day">T</div><div class="cal-header-day">W</div><div class="cal-header-day">T</div><div class="cal-header-day">F</div><div class="cal-header-day">S</div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;">
+                <div class="cal-day other-month" style="font-size:11px;color:var(--slate-300)">1</div>
+                <div class="cal-day other-month" style="font-size:11px;color:var(--slate-300)">2</div>
+                <div class="cal-day other-month" style="font-size:11px;color:var(--slate-300)">3</div>
+                <div class="cal-day other-month" style="font-size:11px;color:var(--slate-300)">4</div>
+                <div class="cal-day other-month" style="font-size:11px;color:var(--slate-300)">5</div>
+                <div class="cal-day other-month" style="font-size:11px;color:var(--slate-300)">6</div>
+                <div class="cal-day" style="font-size:11px">7</div>
+                <div class="cal-day has-event" style="font-size:11px">8</div>
+                <div class="cal-day" style="font-size:11px">9</div>
+                <div class="cal-day has-event" style="font-size:11px">10</div>
+                <div class="cal-day" style="font-size:11px">11</div>
+                <div class="cal-day has-event" style="font-size:11px">12</div>
+                <div class="cal-day" style="font-size:11px">13</div>
+                <div class="cal-day" style="font-size:11px">14</div>
+                <div class="cal-day has-event" style="font-size:11px">15</div>
+                <div class="cal-day" style="font-size:11px">16</div>
+                <div class="cal-day" style="font-size:11px">17</div>
+                <div class="cal-day has-event" style="font-size:11px">18</div>
+                <div class="cal-day" style="font-size:11px">19</div>
+                <div class="cal-day" style="font-size:11px">20</div>
+                <div class="cal-day" style="font-size:11px">21</div>
+                <div class="cal-day has-event" style="font-size:11px">22</div>
+                <div class="cal-day" style="font-size:11px">23</div>
+                <div class="cal-day has-event" style="font-size:11px">24</div>
+                <div class="cal-day" style="font-size:11px">25</div>
+                <div class="cal-day" style="font-size:11px">26</div>
+                <div class="cal-day today has-event" style="font-size:11px">27</div>
+                <div class="cal-day" style="font-size:11px">28</div>
+                <div class="cal-day" style="font-size:11px">29</div>
+                <div class="cal-day" style="font-size:11px">30</div>
+              </div>
+              <div style="margin-top:16px;display:flex;flex-direction:column;gap:6px;">
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--indigo);flex-shrink:0"></div><span style="color:var(--slate-600)">Jun 30 — ML Project Deadline</span></div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--rose);flex-shrink:0"></div><span style="color:var(--slate-600)">Jul 10 — Mid-semester exams begin</span></div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--emerald);flex-shrink:0"></div><span style="color:var(--slate-600)">Jul 15 — Department seminar</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ MATERIALS ============ -->
+      <div class="section" id="sec-materials">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;color:var(--slate-900);margin-bottom:20px;">Study Materials & Resources</div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">All Materials</div>
+            <button class="btn btn-primary btn-sm">
+              <i class="ti ti-upload"></i> Upload
+            </button>
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>File Name</th>
+                  <th>Course</th>
+                  <th>Type</th>
+                  <th>Size</th>
+                  <th>Uploaded</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:18px">📄</span><span style="font-weight:500;font-size:13px;">DSA Lecture Notes — Module 6.pdf</span></div></td>
+                  <td><span class="badge badge-indigo">DSA</span></td>
+                  <td><span class="badge badge-sky">PDF</span></td>
+                  <td style="color:var(--slate-500)">2.4 MB</td>
+                  <td style="color:var(--slate-500)">Jun 25</td>
+                  <td><button class="btn btn-outline btn-sm"><i class="ti ti-download"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:18px">📊</span><span style="font-weight:500;font-size:13px;">DBMS ER Diagram Template.xlsx</span></div></td>
+                  <td><span class="badge badge-emerald">DBMS</span></td>
+                  <td><span class="badge badge-emerald">XLS</span></td>
+                  <td style="color:var(--slate-500)">1.1 MB</td>
+                  <td style="color:var(--slate-500)">Jun 22</td>
+                  <td><button class="btn btn-outline btn-sm"><i class="ti ti-download"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:18px">🎥</span><span style="font-weight:500;font-size:13px;">ML — Neural Networks Lecture Recording</span></div></td>
+                  <td><span class="badge badge-violet">ML</span></td>
+                  <td><span class="badge badge-rose">Video</span></td>
+                  <td style="color:var(--slate-500)">380 MB</td>
+                  <td style="color:var(--slate-500)">Jun 20</td>
+                  <td><button class="btn btn-outline btn-sm"><i class="ti ti-player-play"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:18px">📝</span><span style="font-weight:500;font-size:13px;">OS Previous Year Question Papers.pdf</span></div></td>
+                  <td><span class="badge badge-amber">OS</span></td>
+                  <td><span class="badge badge-sky">PDF</span></td>
+                  <td style="color:var(--slate-500)">5.2 MB</td>
+                  <td style="color:var(--slate-500)">Jun 18</td>
+                  <td><button class="btn btn-outline btn-sm"><i class="ti ti-download"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:18px">🔗</span><span style="font-weight:500;font-size:13px;">Networks Lab Manual — TCP/IP Stack</span></div></td>
+                  <td><span class="badge badge-sky">CN</span></td>
+                  <td><span class="badge badge-indigo">PDF</span></td>
+                  <td style="color:var(--slate-500)">3.8 MB</td>
+                  <td style="color:var(--slate-500)">Jun 15</td>
+                  <td><button class="btn btn-outline btn-sm"><i class="ti ti-download"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ NOTIFICATIONS ============ -->
+      <div class="section" id="sec-notifications">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;color:var(--slate-900)">Notifications</div>
+          <button class="btn btn-ghost btn-sm">Mark all as read</button>
+        </div>
+
+        <div class="notif-item unread">
+          <div style="font-size:20px;">📢</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--slate-800)">ML Project Submission Reminder</div>
+            <div style="font-size:12px;color:var(--slate-500);margin-top:2px;">Your Machine Learning project proposal is due in 3 days. Make sure to submit before Jun 30.</div>
+            <div style="font-size:11px;color:var(--slate-400);margin-top:6px;">2 hours ago · Prof. Karthik Raj</div>
+          </div>
+        </div>
+        <div class="notif-item unread">
+          <div style="font-size:20px;">🏅</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--slate-800)">Grade Released — OS Assignment 3</div>
+            <div style="font-size:12px;color:var(--slate-500);margin-top:2px;">You received A+ (28/30) on Operating Systems Assignment 3. Excellent work!</div>
+            <div style="font-size:11px;color:var(--slate-400);margin-top:6px;">Yesterday · Prof. Meena Iyer</div>
+          </div>
+        </div>
+        <div class="notif-item unread">
+          <div style="font-size:20px;">📅</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--slate-800)">Mid-semester Exam Schedule Released</div>
+            <div style="font-size:12px;color:var(--slate-500);margin-top:2px;">Mid-semester exams are scheduled from July 10–16. Check your hall ticket and exam timetable.</div>
+            <div style="font-size:11px;color:var(--slate-400);margin-top:6px;">2 days ago · Academic Office</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div style="font-size:20px;">📚</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--slate-800)">New Study Material Uploaded</div>
+            <div style="font-size:12px;color:var(--slate-500);margin-top:2px;">Dr. Ramesh uploaded Module 6 notes for Data Structures. 12 new slides available.</div>
+            <div style="font-size:11px;color:var(--slate-400);margin-top:6px;">3 days ago · Dr. Ramesh Kumar</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div style="font-size:20px;">🎓</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--slate-800)">Scholarship Eligibility Update</div>
+            <div style="font-size:12px;color:var(--slate-500);margin-top:2px;">You are eligible for the Merit Scholarship based on your CGPA 8.6. Applications open till July 20.</div>
+            <div style="font-size:11px;color:var(--slate-400);margin-top:6px;">4 days ago · Scholarship Office</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ PROFILE ============ -->
+      <div class="section" id="sec-profile">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;color:var(--slate-900);margin-bottom:20px;">My Profile</div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div style="padding:28px;display:flex;flex-direction:column;align-items:center;text-align:center;border-bottom:1px solid var(--slate-200);">
+              <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--indigo),var(--violet));display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:30px;font-weight:800;color:var(--white);margin-bottom:14px;">N</div>
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;color:var(--slate-900);">Navin Kumar</div>
+              <div style="font-size:13px;color:var(--slate-500);margin-top:4px;">B.Tech Computer Science · Semester 5</div>
+              <div style="display:flex;gap:8px;margin-top:12px;">
+                <span class="badge badge-indigo">Roll No: 21CS045</span>
+                <span class="badge badge-emerald">Active</span>
+              </div>
+              <button class="btn btn-outline" style="margin-top:16px;"><i class="ti ti-edit"></i> Edit Profile</button>
+            </div>
+            <div style="padding:20px;">
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <div style="display:flex;gap:12px;align-items:center;">
+                  <i class="ti ti-mail" style="color:var(--indigo);font-size:16px;width:20px;"></i>
+                  <div>
+                    <div style="font-size:11px;color:var(--slate-400);">Email</div>
+                    <div style="font-size:13px;font-weight:500;color:var(--slate-700);">navin.kumar@college.edu</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:12px;align-items:center;">
+                  <i class="ti ti-phone" style="color:var(--emerald);font-size:16px;width:20px;"></i>
+                  <div>
+                    <div style="font-size:11px;color:var(--slate-400);">Phone</div>
+                    <div style="font-size:13px;font-weight:500;color:var(--slate-700);">+91 98765 43210</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:12px;align-items:center;">
+                  <i class="ti ti-map-pin" style="color:var(--rose);font-size:16px;width:20px;"></i>
+                  <div>
+                    <div style="font-size:11px;color:var(--slate-400);">Location</div>
+                    <div style="font-size:13px;font-weight:500;color:var(--slate-700);">Kanchipuram, Tamil Nadu</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:12px;align-items:center;">
+                  <i class="ti ti-building" style="color:var(--amber);font-size:16px;width:20px;"></i>
+                  <div>
+                    <div style="font-size:11px;color:var(--slate-400);">Department</div>
+                    <div style="font-size:13px;font-weight:500;color:var(--slate-700);">Computer Science & Engineering</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Academic Summary</div>
+              </div>
+              <div class="card-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                  <div style="text-align:center;padding:12px;background:var(--indigo-light);border-radius:var(--radius-sm);">
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--indigo);">8.6</div>
+                    <div style="font-size:11px;color:var(--indigo-dark);margin-top:2px;">CGPA</div>
+                  </div>
+                  <div style="text-align:center;padding:12px;background:var(--emerald-light);border-radius:var(--radius-sm);">
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--emerald);">87%</div>
+                    <div style="font-size:11px;color:var(--emerald);margin-top:2px;">Attendance</div>
+                  </div>
+                  <div style="text-align:center;padding:12px;background:var(--amber-light);border-radius:var(--radius-sm);">
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--amber);">21</div>
+                    <div style="font-size:11px;color:var(--amber);margin-top:2px;">Credits Earned</div>
+                  </div>
+                  <div style="text-align:center;padding:12px;background:var(--violet-light);border-radius:var(--radius-sm);">
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--violet);">#4</div>
+                    <div style="font-size:11px;color:var(--violet);margin-top:2px;">Class Rank</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><div class="card-title">Achievements</div></div>
+              <div class="card-body" style="display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--amber-light);border-radius:var(--radius-sm);">
+                  <span style="font-size:20px;">🏆</span>
+                  <div><div style="font-size:13px;font-weight:600;color:var(--amber);">Merit Scholarship 2025</div><div style="font-size:11px;color:var(--amber);">Academic excellence award</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--indigo-light);border-radius:var(--radius-sm);">
+                  <span style="font-size:20px;">💡</span>
+                  <div><div style="font-size:13px;font-weight:600;color:var(--indigo);">Hackathon Runner-up</div><div style="font-size:11px;color:var(--indigo);">TechFest 2024 — Smart Campus</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--emerald-light);border-radius:var(--radius-sm);">
+                  <span style="font-size:20px;">⭐</span>
+                  <div><div style="font-size:13px;font-weight:600;color:var(--emerald);">Department Topper</div><div style="font-size:11px;color:var(--emerald);">Semester 4 — Top of class</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===== ENROLL MODAL ===== -->
+<div class="modal-overlay" id="enrollModal">
+  <div class="modal">
+    <div class="modal-title">
+      ➕ Enroll in a New Course
+    </div>
+    <div class="form-group">
+      <label class="form-label">Course Name</label>
+      <input class="form-input" type="text" placeholder="e.g. Artificial Intelligence">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Department</label>
+      <select class="form-input form-select">
+        <option>Computer Science</option>
+        <option>Electronics</option>
+        <option>Mathematics</option>
+        <option>Physics</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Instructor</label>
+      <input class="form-input" type="text" placeholder="e.g. Dr. John Smith">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Course Type</label>
+      <select class="form-input form-select">
+        <option>Core</option>
+        <option>Elective</option>
+        <option>Lab</option>
+        <option>Audit</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" style="flex:1" onclick="document.getElementById('enrollModal').classList.remove('open')">Enroll Now</button>
+      <button class="btn btn-outline" onclick="document.getElementById('enrollModal').classList.remove('open')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showSection(id, navBtn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-' + id).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    if (navBtn) navBtn.classList.add('active');
+    const titles = {
+      dashboard: 'Dashboard',
+      courses: 'My Courses',
+      assignments: 'Assignments & Tasks',
+      grades: 'Grades & GPA',
+      schedule: 'Class Schedule',
+      materials: 'Study Materials',
+      notifications: 'Notifications',
+      profile: 'My Profile'
+    };
+    document.getElementById('page-title').textContent = titles[id] || 'NavinEdu';
+  }
+
+  // Close modal on overlay click
+  document.getElementById('enrollModal').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+</script>
+</body>
+</html>
